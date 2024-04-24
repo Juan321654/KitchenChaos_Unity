@@ -4,12 +4,13 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotationSpeed = 10f;
-    [SerializeField] private float interactionDistance = 2f; // Variable for maximum distance of raycast
+    [SerializeField] private float interactionDistance = 1f; // Variable for maximum distance of raycast
 
     private bool isWalking;
     private Vector3 moveDirection;
 
     private PlayerInputActions playerInputActions;
+    private ClearCounter previouslyHighlightedClearCounter;
 
     private void Awake()
     {
@@ -87,12 +88,26 @@ public class Player : MonoBehaviour
             ClearCounter clearCounter = hit.transform.GetComponent<ClearCounter>();
             if (clearCounter != null)
             {
+                clearCounter.Highlight(true); // Highlight the ClearCounter
+
+                // Store the previously highlighted ClearCounter
+                previouslyHighlightedClearCounter = clearCounter;
+
                 // Check if the "E" key is pressed
                 if (playerInputActions.Player.Interact.WasPressedThisFrame())
                 {
                     // Call the method in ClearCounter class
                     clearCounter.Interact();
                 }
+            }
+        }
+        else
+        {
+            // If the raycast doesn't hit anything, unhighlight the previously highlighted ClearCounter
+            if (previouslyHighlightedClearCounter != null)
+            {
+                previouslyHighlightedClearCounter.Highlight(false);
+                previouslyHighlightedClearCounter = null;
             }
         }
     }
