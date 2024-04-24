@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
             ClearCounter clearCounter = hit.transform.GetComponent<ClearCounter>();
             if (clearCounter != null)
             {
-                HighlightHandler.Highlight(clearCounter.prefabToShow, true);
+                HighlightHandler.Highlight(clearCounter.prefabToShowOnHighlight, true);
 
                 // Store the previously highlighted ClearCounter
                 previouslyHighlightedClearCounter = clearCounter;
@@ -106,7 +106,7 @@ public class Player : MonoBehaviour
             // If the raycast doesn't hit anything, unhighlight the previously highlighted ClearCounter
             if (previouslyHighlightedClearCounter != null)
             {
-                HighlightHandler.Highlight(previouslyHighlightedClearCounter.prefabToShow, false);
+                HighlightHandler.Highlight(previouslyHighlightedClearCounter.prefabToShowOnHighlight, false);
                 previouslyHighlightedClearCounter = null;
             }
         }

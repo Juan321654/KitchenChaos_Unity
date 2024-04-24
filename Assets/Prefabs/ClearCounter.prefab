@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41cc7af1d7f4de84abcc0999714ccc9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToShow: {fileID: 5978340618496829905}
+  prefabToShowOnHighlight: {fileID: 5978340618496829905}
 --- !u!1001 &2866390703390620186
 PrefabInstance:
   m_ObjectHideFlags: 0

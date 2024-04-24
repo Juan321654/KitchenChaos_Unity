@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ClearCounter : MonoBehaviour
 {
-    public GameObject prefabToShow;
+    public GameObject prefabToShowOnHighlight;
 
     public void Interact()
     {
