@@ -1,16 +1,18 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float interactionDistance = 1f; // Variable for maximum distance of raycast
+    [SerializeField] private Transform kitchenObjectHoldPoint;
 
     private bool isWalking;
     private Vector3 moveDirection;
 
     private PlayerInputActions playerInputActions;
     private ClearCounter previouslyHighlightedClearCounter;
+    private KitchenObject kitchenObject;
 
     private void Awake()
     {
@@ -84,6 +86,9 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance))
         {
+            //draw a line to see the raycast
+            //Debug.DrawRay(transform.position, transform.forward * interactionDistance, Color.red);
+
             // Check if the hit object has the class ClearCounter
             ClearCounter clearCounter = hit.transform.GetComponent<ClearCounter>();
             if (clearCounter != null)
@@ -97,7 +102,7 @@ public class Player : MonoBehaviour
                 if (playerInputActions.Player.Interact.WasPressedThisFrame())
                 {
                     // Call the method in ClearCounter class
-                    clearCounter.Interact();
+                    clearCounter.Interact(this);
                 }
             }
         }
@@ -110,5 +115,30 @@ public class Player : MonoBehaviour
                 previouslyHighlightedClearCounter = null;
             }
         }
+    }
+
+    public Transform GetKitchenObjectFollowTransform()
+    {
+        return kitchenObjectHoldPoint;
+    }
+
+    public void SetKitchenObject(KitchenObject kitchenObject)
+    {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject()
+    {
+        return kitchenObject;
+    }
+
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+
+    public bool HasKitchenObject()
+    {
+        return kitchenObject != null;
     }
 }
