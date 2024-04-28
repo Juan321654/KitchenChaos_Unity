@@ -11,7 +11,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private Vector3 moveDirection;
 
     private PlayerInputActions playerInputActions;
-    private ClearCounter previouslyHighlightedClearCounter;
+    private BaseCounter previouslyHighlightedClearCounter;
     private KitchenObject kitchenObject;
 
     private void Awake()
@@ -90,19 +90,19 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             //Debug.DrawRay(transform.position, transform.forward * interactionDistance, Color.red);
 
             // Check if the hit object has the class ClearCounter
-            ClearCounter clearCounter = hit.transform.GetComponent<ClearCounter>();
-            if (clearCounter != null)
+            BaseCounter baseCounter = hit.transform.GetComponent<BaseCounter>();
+            if (baseCounter != null)
             {
-                HighlightHandler.Highlight(clearCounter.prefabToShowOnHighlight, true);
+                baseCounter.Highlight(true);
 
-                // Store the previously highlighted ClearCounter
-                previouslyHighlightedClearCounter = clearCounter;
+                // Store the previously highlighted BaseCounter
+                previouslyHighlightedClearCounter = baseCounter;
 
                 // Check if the "E" key is pressed
                 if (playerInputActions.Player.Interact.WasPressedThisFrame())
                 {
-                    // Call the method in ClearCounter class
-                    clearCounter.Interact(this);
+                    // Call the method in BaseCounter class
+                    baseCounter.Interact(this);
                 }
             }
         }
@@ -111,7 +111,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             // If the raycast doesn't hit anything, unhighlight the previously highlighted ClearCounter
             if (previouslyHighlightedClearCounter != null)
             {
-                HighlightHandler.Highlight(previouslyHighlightedClearCounter.prefabToShowOnHighlight, false);
+                previouslyHighlightedClearCounter.Highlight(false);
                 previouslyHighlightedClearCounter = null;
             }
         }
