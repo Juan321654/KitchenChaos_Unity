@@ -9,6 +9,10 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     {
         Debug.LogError("Interacting with BaseCounter class should not be possible. Please check the derived class.");
     }
+    public virtual void InteractAlternate(Player player)
+    {
+        Debug.LogError("Interacting ALT with BaseCounter class should not be possible. Please check the derived class.");
+    }
 
     public void Highlight(bool highlight)
     {

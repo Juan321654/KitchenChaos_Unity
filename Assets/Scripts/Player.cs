@@ -104,6 +104,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                     // Call the method in BaseCounter class
                     baseCounter.Interact(this);
                 }
+                if (playerInputActions.Player.InteractAlternate.WasPressedThisFrame())
+                {
+                    baseCounter.InteractAlternate(this);
+                }
             }
         }
         else
