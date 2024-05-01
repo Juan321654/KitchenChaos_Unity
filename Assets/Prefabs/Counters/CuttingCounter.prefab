@@ -100,7 +100,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabToShowOnHighlight: {fileID: 5561119254650140599}
   counterTopPoint: {fileID: 3743473985953328869}
-  cutKitchenObjectSO: {fileID: 11400000, guid: 1b9f054c1713de4459907a6c91dd8ea5, type: 2}
+  cuttingRecipeSOArray:
+  - {fileID: 11400000, guid: a1d11c74b0fab7146b5dbf65f3b64d46, type: 2}
+  - {fileID: 11400000, guid: 1a5260371add52b4fb6e9c0fff06aae6, type: 2}
+  - {fileID: 11400000, guid: 111288478240fa644b72b53d12883ee1, type: 2}
 --- !u!4 &3743473985953328869 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 962842785999925942, guid: a158f9505998c3146a0c58a78102abfe,
