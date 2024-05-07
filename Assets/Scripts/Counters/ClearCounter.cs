@@ -17,11 +17,37 @@ public class ClearCounter : BaseCounter
         }
     }
 
+
+    private void HandlePlateWithIngredient(Player player)
+    {
+        if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) // player holding a plate
+        {
+            if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) // add the ingredient to the plate
+            {
+                GetKitchenObject().DestroySelf();
+            }
+        }
+        else
+        {
+            if (GetKitchenObject().TryGetPlate(out plateKitchenObject)) // player not holding a plate but the counter has a plate
+            {
+                if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO())) // add the ingredient to the plate
+                {
+                    player.GetKitchenObject().DestroySelf();
+                }
+            }
+        }
+    }
+
     private void TransferKitchenObjectToPlayer(Player player)
     {
         if (!player.HasKitchenObject())
         {
             GetKitchenObject().SetKitchenObjectParent(player);
+        }
+        else
+        {
+            HandlePlateWithIngredient(player);
         }
     }
 

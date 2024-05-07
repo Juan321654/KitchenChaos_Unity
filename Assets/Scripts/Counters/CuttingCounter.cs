@@ -15,10 +15,22 @@ public class CuttingCounter : BaseCounter, IHasProgress
         if (HasKitchenObject())
         {
             TransferKitchenObjectToPlayer(player);
+            HandlePlateWithIngredient(player);
         }
         else
         {
             TransferKitchenObjectFromPlayer(player);
+        }
+    }
+
+    private void HandlePlateWithIngredient(Player player)
+    {
+        if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+        {
+            if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+            {
+                GetKitchenObject().DestroySelf();
+            }
         }
     }
 

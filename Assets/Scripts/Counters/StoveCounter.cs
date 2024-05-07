@@ -27,6 +27,7 @@ public class StoveCounter : BaseCounter, IHasProgress
         if (HasKitchenObject())
         {
             TransferKitchenObjectToPlayer(player);
+            HandlePlateWithIngredient(player);
         }
         else
         {
@@ -43,6 +44,22 @@ public class StoveCounter : BaseCounter, IHasProgress
             state = State.Frying;
             fryingTimer = 0;
             stoveCounterVisual.SetStoveOn(true);
+        }
+    }
+
+    private void HandlePlateWithIngredient(Player player)
+    {
+        if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+        {
+            if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+            {
+                GetKitchenObject().DestroySelf();
+                stoveCounterVisual.SetStoveOn(false);
+                state = State.Idle;
+                fryingTimer = 0;
+                burningTimer = 0;
+                OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs { progressNormalized = 0 });
+            }
         }
     }
 
