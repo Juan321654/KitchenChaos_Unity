@@ -5,7 +5,8 @@ using UnityEngine;
 public class StoveCounter : BaseCounter, IHasProgress
 {
     public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
-    private enum State
+    public event EventHandler OnStateFryingOrFried;
+    public enum State
     {
         Idle,
         Frying,
@@ -21,6 +22,11 @@ public class StoveCounter : BaseCounter, IHasProgress
     private FryingRecipeSO fryingRecipeSO;
     private float burningTimer;
     private BurningRecipeSO burningRecipeSO;
+
+    public State GetState()
+    {
+        return state;
+    }
 
     public override void Interact(Player player)
     {
@@ -44,6 +50,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             state = State.Frying;
             fryingTimer = 0;
             stoveCounterVisual.SetStoveOn(true);
+            OnStateFryingOrFried?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -59,6 +66,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                 fryingTimer = 0;
                 burningTimer = 0;
                 OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs { progressNormalized = 0 });
+                OnStateFryingOrFried?.Invoke(this, EventArgs.Empty);
             }
         }
     }
@@ -85,6 +93,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
 
             burningTimer = 0;
+            OnStateFryingOrFried?.Invoke(this, EventArgs.Empty);
         }
 
     }
@@ -144,6 +153,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             fryingTimer = 0;
             burningTimer = 0;
             OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs { progressNormalized = 0 });
+            OnStateFryingOrFried?.Invoke(this, EventArgs.Empty);
         }
     }
 
