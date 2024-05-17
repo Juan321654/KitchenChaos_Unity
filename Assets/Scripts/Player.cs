@@ -84,6 +84,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleInteraction()
     {
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
         // Shoot a raycast in front of the player
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance))
