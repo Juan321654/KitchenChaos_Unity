@@ -6,16 +6,20 @@ using UnityEngine.Rendering;
 
 public class SoundManager : MonoBehaviour
 {
+    private const string PLAYER_PREFS_SOUND_EFFECTS_VOLUME = "SoundEffectsVolume";
     public static SoundManager Instance { get; private set; }
 
     [SerializeField] private AudioClipRefSO audioClipRefSO;
-    [SerializeField] private float soundVolumen = 0.2f;
     private Vector3 cameraPosition;
+    private float volume = 1f;
+    private float defaultVolume = 1f;
 
     private void Awake()
     {
         cameraPosition = Camera.main.transform.position;
         Instance = this;
+
+        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, defaultVolume); // (defaultVolume) Set the default volume if it doesn't exist
     }
 
     private void Start()
@@ -30,35 +34,35 @@ public class SoundManager : MonoBehaviour
 
     private void TrashCounter_OnAnyObjectTrashed(object sender, EventArgs e)
     {
-        PlaySound(audioClipRefSO.trash, cameraPosition, soundVolumen);
+        PlaySound(audioClipRefSO.trash, cameraPosition);
     }
 
     private void BaseCounter_OnAnyObjectPlacedHere(object sender, EventArgs e)
     {
-        PlaySound(audioClipRefSO.objectDrop, cameraPosition, soundVolumen);
+        PlaySound(audioClipRefSO.objectDrop, cameraPosition);
     }
 
     private void Player_OnPickedSomething(object sender, EventArgs e)
     {
-        PlaySound(audioClipRefSO.objectPickup, cameraPosition, soundVolumen);
+        PlaySound(audioClipRefSO.objectPickup, cameraPosition);
     }
 
     private void CuttingCounter_OnAnyCut(object sender, EventArgs e)
     {
-        PlaySound(audioClipRefSO.chop, cameraPosition, soundVolumen);
+        PlaySound(audioClipRefSO.chop, cameraPosition);
     }
 
     private void DeliveryManager_OnRecipeFailed(object sender, EventArgs e)
     {
         // DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
-        PlaySound(audioClipRefSO.deliveryFail, cameraPosition, soundVolumen);
+        PlaySound(audioClipRefSO.deliveryFail, cameraPosition);
     }
 
     private void DeliveryManager_OnRecipeSuccess(object sender, EventArgs e)
     {
         // DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
         // PlaySound(audioClipRefSO.deliverySuccess, deliveryCounter.transform.position);
-        PlaySound(audioClipRefSO.deliverySuccess, cameraPosition, soundVolumen);
+        PlaySound(audioClipRefSO.deliverySuccess, cameraPosition);
     }
 
     private void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume = 1f)
@@ -70,13 +74,29 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f)
+    private void PlaySound(AudioClip audioClip, Vector3 position, float volumeMultiplier = 1f)
     {
-        AudioSource.PlayClipAtPoint(audioClip, position, volume);
+        AudioSource.PlayClipAtPoint(audioClip, position, volumeMultiplier * volume);
     }
 
     public void PlayFootstepsSound(Vector3 position, float volume)
     {
         PlaySound(audioClipRefSO.footstep, position, volume);
+    }
+
+    public void ChangeVolume()
+    {
+        volume += 0.1f;
+        if (volume > 1f)
+        {
+            volume = 0f;
+        }
+        PlayerPrefs.SetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, volume);
+        PlayerPrefs.Save();
+    }
+
+    public float GetVolume()
+    {
+        return volume;
     }
 }
