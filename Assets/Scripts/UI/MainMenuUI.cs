@@ -20,5 +20,7 @@ public class MainMenuUI : MonoBehaviour
         {
             Application.Quit(); // This will only work in a build, not in the editor
         });
+
+        Time.timeScale = 1f;
     }
 }

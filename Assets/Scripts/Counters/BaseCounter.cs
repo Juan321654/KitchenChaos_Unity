@@ -3,6 +3,10 @@ using UnityEngine;
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
     public static event System.EventHandler OnAnyObjectPlacedHere;
+    public static void ResetStaticData()
+    {
+        OnAnyObjectPlacedHere = null;
+    }
     [SerializeField] protected GameObject prefabToShowOnHighlight;
     [SerializeField] private Transform counterTopPoint;
     private KitchenObject kitchenObject;
