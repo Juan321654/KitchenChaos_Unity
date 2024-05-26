@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public class KitchenGameManager : MonoBehaviour
@@ -11,12 +12,13 @@ public class KitchenGameManager : MonoBehaviour
     public event EventHandler OnGamePaused;
     public event EventHandler OnGameUnpaused;
 
-    private enum State
+    public enum State
     {
         WaitingToStart,
         CountdownToStart,
         GamePlaying,
-        GameOver
+        GameOver,
+        WaitingForTutorialSkip
     }
 
     private State state;
@@ -31,7 +33,7 @@ public class KitchenGameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        state = State.WaitingToStart;
+        state = State.WaitingForTutorialSkip;
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable(); // Enable the input actions
     }
@@ -42,6 +44,14 @@ public class KitchenGameManager : MonoBehaviour
         {
             Debug.Log("Pause triggered");
             TogglePauseGame();
+        }
+
+        if (playerInputActions.Player.Interact.WasPressedThisFrame())
+        {
+            if (state == State.WaitingForTutorialSkip)
+            {
+                SkipTutorial();
+            }
         }
 
         switch (state)
@@ -72,7 +82,6 @@ public class KitchenGameManager : MonoBehaviour
                 }
                 break;
             case State.GameOver:
-                Debug.Log("Game Over!");
                 break;
         }
     }
@@ -115,5 +124,16 @@ public class KitchenGameManager : MonoBehaviour
             Time.timeScale = 1;
             OnGameUnpaused?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    public State GetState()
+    {
+        return state;
+    }
+
+    public void SkipTutorial()
+    {
+        state = State.WaitingToStart;
+        OnStateChanged?.Invoke(this, EventArgs.Empty);
     }
 }

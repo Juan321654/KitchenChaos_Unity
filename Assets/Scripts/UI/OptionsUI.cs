@@ -112,7 +112,7 @@ public class OptionsUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private string GetBindingText(Binding binding)
+    public string GetBindingText(Binding binding)
     {
         switch (binding)
         {
