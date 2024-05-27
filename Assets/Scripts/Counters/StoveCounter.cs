@@ -164,4 +164,9 @@ public class StoveCounter : BaseCounter, IHasProgress
             player.GetKitchenObject().SetKitchenObjectParent(this);
         }
     }
+
+    public bool IsFried()
+    {
+        return state == State.Fried;
+    }
 }
