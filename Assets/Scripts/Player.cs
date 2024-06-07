@@ -1,7 +1,8 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IKitchenObjectParent
+public class Player : NetworkBehaviour, IKitchenObjectParent // must have the NewtworkBehaviour class to be able to appear in the network
 {
     public static event EventHandler OnPickedSomething;
     [SerializeField] private float moveSpeed = 7f;

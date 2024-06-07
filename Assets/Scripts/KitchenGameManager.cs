@@ -25,7 +25,7 @@ public class KitchenGameManager : MonoBehaviour
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
-    private float gamePlayingTimerMax = 240f; // 4 minutes
+    private float gamePlayingTimerMax = 300f; // 5 minutes
     private bool isGamePaused = false;
 
     private PlayerInputActions playerInputActions;
@@ -36,6 +36,11 @@ public class KitchenGameManager : MonoBehaviour
         state = State.WaitingForTutorialSkip;
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable(); // Enable the input actions
+
+        // ------------------------ ATTENTTION ------------------------
+        SkipTutorial(); // FOR DEVELOPING, REMOVE THIS LINE WHEN DONE WITH GAME FOR RELEASE
+        countdownToStartTimer = 0; // FOR DEVELOPING, REMOVE THIS LINE WHEN DONE WITH GAME FOR RELEASE
+        // ------------------------ ATTENTTION ------------------------
     }
 
     void Update()
