@@ -34,6 +34,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent // must have the Ne
 
     private void Update()
     {
+        if (!IsOwner) return; // only the owner of the player can control it (the owner is the player that created the room
         HandleMovementInput();
         HandleInteraction();
     }
