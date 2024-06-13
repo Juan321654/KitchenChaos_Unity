@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Unity.Netcode;
 
-public class DeliveryManager : MonoBehaviour
+public class DeliveryManager : NetworkBehaviour
 {
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
@@ -14,7 +15,7 @@ public class DeliveryManager : MonoBehaviour
 
     [SerializeField] private RecipeListSO recipeListSO;
     private List<RecipeSO> waitingRecipeSOList;
-    private float spawnRecipeTimer;
+    private float spawnRecipeTimer = 4f;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipesMax = 4;
     private int successfulRecipesAmount;
@@ -27,26 +28,41 @@ public class DeliveryManager : MonoBehaviour
 
     void Update()
     {
+        if (!IsServer) return; // only the server can spawn recipes (the server is the player that created the room)
         spawnRecipeTimer -= Time.deltaTime;
         if (spawnRecipeTimer <= 0f)
         {
             spawnRecipeTimer = spawnRecipeTimerMax;
-            SpawnRecipe();
+            SpawnRecipeServer();
         }
-
     }
 
-    private void SpawnRecipe()
+    private void SpawnRecipeServer()
     {
         if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < waitingRecipesMax)
         {
             RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
             waitingRecipeSOList.Add(waitingRecipeSO);
+            OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
 
+            // Notify clients about the new recipe
+            AddRecipeClientRpc(waitingRecipeSO.recipeName);
+        }
+    }
+
+    [ClientRpc]
+    private void AddRecipeClientRpc(string recipeName)
+    {
+        if (IsServer) return; // Only clients should add the recipe in this method
+
+        RecipeSO recipeSO = recipeListSO.recipeSOList.Find(r => r.recipeName == recipeName);
+        if (recipeSO != null)
+        {
+            waitingRecipeSOList.Add(recipeSO);
             OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
         }
     }
-    
+
     public void DeliverRecipe(PlateKitchenObject plateKitchenObject)
     {
         bool recipeFound = false;
